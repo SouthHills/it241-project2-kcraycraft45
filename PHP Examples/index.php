@@ -1,5 +1,5 @@
 <?php
-require_once 'shared/db.inc';
+require_once './shared/db.inc';
 /**
  * @var mysqli $conn
  */
@@ -13,13 +13,39 @@ if(session_status() != PHP_SESSION_ACTIVE)
 {
     session_start();
 }
+$errors = [];
+$loginSuccess = false;
+
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    $username = trim($_POST['$username']);
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM SQL_INJECTION_PROJECT.LOGINS WHERE USERNAME = '$username'";
-    $result = $conn->query($sql);
+    if(empty($username))
+    {
+        $errors[] = "Username is required.";
+    }
+    if(empty($password))
+    {
+        $errors[] = "Password is required.";
+    }
+    if(empty($errors)) {
+
+
+        $sql = "SELECT * FROM LOGINS WHERE (USERNAME = '$username') AND (PASSWORD = '$password')";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($result);
+        if($row)
+        {
+            $loginSuccess = true;
+            $message = "Success";
+            echo "<script type='text/javascript'>alert('$message');</script>";
+        }
+    }
+    //echo $usernameAsString;
+    //echo $passwordAsString;
+
+
     //echo $result;
 
 }
@@ -37,7 +63,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         <form action="index.php" method="post">
             <h1>Log in</h1>
             <div class="form-floating">
-                <input id="username" name="username" type="username" class="form-control" placeholder="name@example.com" required />
+                <input id="username" name="username" type="text" class="form-control" placeholder="name@example.com" required />
                 <label for="username">Email</label>
             </div>
             <div class="form-floating">

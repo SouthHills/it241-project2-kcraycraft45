@@ -13,8 +13,17 @@ if(session_status() != PHP_SESSION_ACTIVE)
 {
     session_start();
 }
-?>
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+    $username = trim($_POST['$username']);
+    $password = $_POST['password'];
 
+    $sql = "SELECT * FROM SQL_INJECTION_PROJECT.LOGINS WHERE USERNAME = '$username'";
+    $result = $conn->query($sql);
+    //echo $result;
+
+}
+?>
 
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -25,11 +34,11 @@ if(session_status() != PHP_SESSION_ACTIVE)
 <body>
 <div class="d-inline-block w-50 m-auto">
     <main class="log-in">
-        <form action="login.php" method="post">
+        <form action="index.php" method="post">
             <h1>Log in</h1>
             <div class="form-floating">
-                <input id="email" name="email" type="email" class="form-control" placeholder="name@example.com" required />
-                <label for="email">Email</label>
+                <input id="username" name="username" type="username" class="form-control" placeholder="name@example.com" required />
+                <label for="username">Email</label>
             </div>
             <div class="form-floating">
                 <input id="password" name="password" type="password" class="form-control" placeholder="Password!123" required />

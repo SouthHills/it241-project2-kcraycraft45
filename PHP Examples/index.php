@@ -32,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
     if(empty($errors)) {
 
 
-        $sql = "SELECT * FROM LOGINS WHERE (USERNAME = '$username') AND (PASSWORD = '$password')";
+        $sql = "SELECT * FROM LOGINS WHERE (USERNAME = '$username') AND (PASSWORD = '$password');";
         $conn->query($sql);
         $result = $conn->use_result();
         foreach($result as $row) {

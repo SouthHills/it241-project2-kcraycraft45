@@ -33,13 +33,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
         $sql = "SELECT * FROM LOGINS WHERE (USERNAME = '$username') AND (PASSWORD = '$password')";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        if($row)
-        {
-            $loginSuccess = true;
-            $message = "Success";
-            echo "<script type='text/javascript'>alert('$message');</script>";
+        $conn->query($sql);
+        $result = $conn->use_result();
+        foreach($result as $row) {
+
+
+            if ($row) {
+                echo $row['USERNAME'] . "\n";
+                $loginSuccess = true;
+                $message = "Success";
+                echo "<script type='text/javascript'>alert('$message');</script>";
+            }
         }
     }
     //echo $usernameAsString;

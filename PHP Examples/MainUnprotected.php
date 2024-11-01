@@ -1,8 +1,10 @@
 <?php
-require_once './shared/db.inc';
-/**
- * @var mysqli $conn
- */
+$servername = "localhost";
+$username = "kaaucri";
+$password = "IT241Pwd!";
+$dbname = "SQL_INJECTION_PROJECT";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 if($conn->connect_error)
 {

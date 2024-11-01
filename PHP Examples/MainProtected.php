@@ -1,14 +1,6 @@
 <?php
-require_once 'shared/db.inc';
-/**
- * @var mysqli $conn
- * Connection to the database
- */
+$pdo= new PDO('mysql:host=localhost;dbname=SQL_INJECTION_PROJECT', 'kaaucri', 'IT241Pwd!');
 
-if($conn->connect_error)
-{
-    die("Failed connection - " . $conn->connect_error);
-}
 
 if(session_status() != PHP_SESSION_ACTIVE)
 {
@@ -34,27 +26,26 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
     }
     if(empty($errors)) {
         // Stored Procedure
-        $storedProcedure = "SELECT * FROM LOGINS WHERE (USERNAME = ?) && (PASSWORD = ?) LIMIT 1";
+        $query = "SELECT * FROM LOGINS WHERE (USERNAME = ?) && (PASSWORD = ?) LIMIT 1";
 
         // Prepared Statement via...
-        $stmt = $conn->prepare($storedProcedure);
+        $stmt = $pdo->prepare($query);
 
         // ... Variable Binding.
-        $stmt->bind_param('ss', $username, $password);
-        $stmt->execute();
-        $result = $stmt->store_result();
+        $stmt->execute([$username, $password]);
 
-        if ($stmt->num_rows === 1) {
+        $result = $stmt->fetchAll();
+
+        if ($result) {
             echo "<script>alert('Logged in Successfully');</script>";
         } else {
             echo "<script>alert('Invalid Credentials');</script>";
         }
 
-        $stmt->close();
         exit();
     }
+    $pdo = null;
 }
-$conn->close();
 ?>
 
 <html lang="en" data-bs-theme="dark">

@@ -18,6 +18,8 @@ $loginSuccess = false;
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+    // Get username and password from input fields...
+    // ... Do not escape characters or check validity of input text formats
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
@@ -30,10 +32,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         $errors[] = "Password is required.";
     }
     if(empty($errors)) {
+        // Input text directly into the SQL statement from input fields without sanitization.
         $sql = "SELECT * FROM LOGINS WHERE (USERNAME = '$username') AND (PASSWORD = '$password') LIMIT 1;";
+
         error_log($sql);
+
+        // Run the sql query without any code protection (try{...} catch{...})
         $conn->real_query($sql);
         $result = $conn->use_result();
+
+        // If results are returned, log the user in.
         foreach($result as $row) {
             if ($row) {
                 echo $row['USERNAME'] . "\n";
@@ -53,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 <div class="d-inline-block w-50 m-auto">
     <main class="log-in">
-        <form action="ParameterizedQueriesUnprotected.php" method="post">
+        <form action="MainUnprotected.php" method="post">
             <h1>Log in</h1>
             <div class="form-floating">
                 <input id="username" name="username" type="text" class="form-control" placeholder="name@example.com" required />

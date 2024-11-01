@@ -53,7 +53,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 <div class="d-inline-block w-50 m-auto">
     <main class="log-in">
-        <form action="ParameterizedQueriesUnprotected.php" method="post">
+        <form action="MainUnprotected.php" method="post">
             <h1>Log in</h1>
             <div class="form-floating">
                 <input id="username" name="username" type="text" class="form-control" placeholder="name@example.com" required />

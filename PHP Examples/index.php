@@ -1,3 +1,3 @@
 <?php
 /*Place whatever module you wish to run in here*/
-require_once("./ParameterizedQueriesProtected.php");
+require_once("./MainProtected.php");

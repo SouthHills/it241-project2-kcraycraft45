@@ -2,6 +2,7 @@
 require_once 'shared/db.inc';
 /**
  * @var mysqli $conn
+ * Connection to the database
  */
 
 if($conn->connect_error)
@@ -13,11 +14,13 @@ if(session_status() != PHP_SESSION_ACTIVE)
 {
     session_start();
 }
+
 $errors = [];
 $loginSuccess = false;
 
 if($_SERVER['REQUEST_METHOD'] === 'POST')
 {
+    // Get username and password from input fields
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
@@ -30,18 +33,23 @@ if($_SERVER['REQUEST_METHOD'] === 'POST')
         $errors[] = "Password is required.";
     }
     if(empty($errors)) {
-        $stmt = $conn->prepare("SELECT * FROM LOGINS WHERE (USERNAME = ?) && (PASSWORD = ?) LIMIT 1");
-        // This form of Prepaared statements utilizes parameterized queries along with stored procedures to protect the database from using text from a user directly in a SQL statement.
+        // Stored Procedure
+        $storedProcedure = "SELECT * FROM LOGINS WHERE (USERNAME = ?) && (PASSWORD = ?) LIMIT 1";
 
+        // Prepared Statement via...
+        $stmt = $conn->prepare($storedProcedure);
 
+        // ... Variable Binding.
         $stmt->bind_param('ss', $username, $password);
         $stmt->execute();
         $result = $stmt->store_result();
+
         if ($stmt->num_rows === 1) {
             echo "<script>alert('Logged in Successfully');</script>";
         } else {
             echo "<script>alert('Invalid Credentials');</script>";
         }
+
         $stmt->close();
         exit();
     }
@@ -58,7 +66,7 @@ $conn->close();
 <body>
 <div class="d-inline-block w-50 m-auto">
     <main class="log-in">
-        <form action="ParameterizedQueriesProtected.php" method="post">
+        <form action="MainProtected.php" method="post">
             <h1>Log in</h1>
             <?php if(empty($errors) === false): ?>
                 <div class="alert alert-danger">
